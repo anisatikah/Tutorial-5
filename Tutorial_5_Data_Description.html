@@ -1,19 +1,22 @@
-<script>
-  var password = prompt("Sila masukkan kata laluan untuk melihat draf ini:");
-  if (password !== "An15120467##") {
-    document.body.innerHTML = "<h2 style='text-align:center; margin-top:20%;'>Akses Dihalang</h2>";
-  }
-</script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PRP1046 Mathematics 2 — Tutorial 5: Data Description</title>
+  <script>
+  var password = prompt("Sila masukkan kata laluan untuk melihat draf ini:");
+  if (password !== "An15120467##") {
+    // Kita guna document.documentElement supaya ia padam keseluruhan web terus
+    document.documentElement.innerHTML = "<h2 style='text-align:center; margin-top:20%; font-family:sans-serif;'>Akses Dihalang</h2>";
+    window.stop(); // Berhentikan browser dari load fail carta dan CSS yang berat di bawah
+  }
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
+: root {
   --ocean-deep: #1a5276;
   --ocean-mid: #2980b9;
   --ocean-light: #5dade2;
