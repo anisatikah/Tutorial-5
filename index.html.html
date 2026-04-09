@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRP1046 Mathematics 2 — Tutorial 5: Data Description</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ocean-deep: #1a5276;
+  --ocean-mid: #2980b9;
+  --ocean-light: #5dade2;
+  --ocean-pale: #aed6f1;
+  --ocean-wash: #d6eaf8;
+  --coral: #e74c3c;
+  --coral-soft: #f1948a;
+  --coral-pale: #fadbd8;
+  --gold: #d4a017;
+  --gold-soft: #f0c75e;
+  --gold-pale: #fef9e7;
+  --sand: #fdfaf3;
+  --white: #ffffff;
+  --off-white: #f8f9fa;
+  --text-dark: #1b2631;
+  --text-mid: #2c3e50;
+  --text-light: #566573;
+  --border: #d5dbdb;
+  --shadow: rgba(26, 82, 118, 0.08);
+  --shadow-md: rgba(26, 82, 118, 0.12);
+}
+/* ── DARK MODE ── */
+[data-theme="dark"] {
+  --ocean-deep: #7fb3d8;
+  --ocean-mid: #5dade2;
+  --ocean-light: #85c1e9;
+  --ocean-pale: #2c3e50;
+  --ocean-wash: #1c2833;
+  --coral: #f1948a;
+  --coral-soft: #e74c3c;
+  --coral-pale: #3b1a1a;
+  --gold: #f0c75e;
+  --gold-soft: #d4a017;
+  --gold-pale: #2a2410;
+  --sand: #0d1117;
+  --white: #161b22;
+  --off-white: #1c2128;
+  --text-dark: #e6edf3;
+  --text-mid: #c9d1d9;
+  --text-light: #8b949e;
+  --border: #30363d;
+  --shadow: rgba(0,0,0,0.3);
+  --shadow-md: rgba(0,0,0,0.4);
+}
+[data-theme="dark"] .title-slide {
+  background: linear-gradient(170deg, #0d1117 0%, #1c2833 50%, #0d1117 100%);
+}
+[data-theme="dark"] .nav-bar {
+  background: #161b22; border-top-color: #30363d;
+}
+[data-theme="dark"] .data-table th {
+  background: #1a3a5c; color: #e6edf3;
+}
+[data-theme="dark"] .formula-box {
+  background: #1a3a5c; color: #e6edf3;
+}
+[data-theme="dark"] .final-answer {
+  background: linear-gradient(135deg, #3b1a1a, #2a2410);
+  border-color: #e74c3c;
+}
+[data-theme="dark"] .click-prompt {
+  background: #30363d;
+}
+[data-theme="dark"] .nav-btn {
+  background: #1a3a5c;
+}
+[data-theme="dark"] .nav-btn:hover {
+  background: #2980b9;
+}
+[data-theme="dark"] .nav-btn:disabled {
+  background: #21262d;
+}
+[data-theme="dark"] .data-grid span {
+  background: #1c2128; border-color: #30363d; color: #c9d1d9;
+}
+[data-theme="dark"] .data-table tr:nth-child(even) {
+  background: #1c2128;
+}
+[data-theme="dark"] .data-table tr:hover {
+  background: #1c2833;
+}
+[data-theme="dark"] .data-table .highlight-row {
+  background: #2a2410 !important;
+}
+[data-theme="dark"] .slide-counter { color: #8b949e; }
+/* Toggle button */
+.theme-toggle {
+  background: none; border: 2px solid var(--ocean-pale);
+  width: 2.2rem; height: 2.2rem; border-radius: 50%;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; transition: all 0.3s; padding: 0;
+  position: relative;
+}
+.theme-toggle:hover { border-color: var(--ocean-mid); transform: scale(1.1); }
+.theme-toggle .icon-sun, .theme-toggle .icon-moon { position: absolute; transition: opacity 0.3s, transform 0.3s; }
+.theme-toggle .icon-moon { opacity: 1; transform: rotate(0deg); }
+.theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg); }
+[data-theme="dark"] .theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg); }
+[data-theme="dark"] .theme-toggle .icon-sun { opacity: 1; transform: rotate(0deg); }
+
+/* ── PASSWORD OVERLAY ── */
+.pw-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: var(--sand);
+  z-index: 9999; display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+}
+.pw-overlay.hidden { display: none; }
+.pw-box {
+  background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+  padding: 2.5rem 2rem; max-width: 380px; width: 90%;
+  box-shadow: 0 8px 32px var(--shadow-md); text-align: center;
+}
+.pw-box .pw-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+.pw-box h2 {
+  font-family: 'DM Serif Display', serif; color: var(--ocean-deep);
+  font-size: 1.4rem; margin-bottom: 0.3rem;
+}
+.pw-box p { font-size: 0.85rem; color: var(--text-light); margin-bottom: 1.5rem; }
+.pw-input-wrap { position: relative; margin-bottom: 1rem; }
+.pw-input {
+  width: 100%; padding: 0.7rem 1rem; border: 2px solid var(--border);
+  border-radius: 8px; font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem; background: var(--off-white); color: var(--text-dark);
+  outline: none; transition: border-color 0.3s;
+}
+.pw-input:focus { border-color: var(--ocean-mid); }
+.pw-input.error { border-color: var(--coral); animation: shake 0.4s ease; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+.pw-submit {
+  width: 100%; padding: 0.7rem; background: var(--ocean-deep); color: var(--white);
+  border: none; border-radius: 8px; font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.pw-submit:hover { background: var(--ocean-mid); transform: translateY(-1px); }
+.pw-error-msg {
+  font-size: 0.8rem; color: var(--coral); margin-top: 0.5rem;
+  min-height: 1.2rem; font-weight: 500;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--sand);
+  color: var(--text-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+.presentation { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+.slide {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none; flex-direction: column;
+  padding: 2.5rem 3.5rem 5rem;
+  overflow-y: auto;
+  background: var(--sand);
+  scrollbar-width: thin;
+  scrollbar-color: var(--ocean-pale) transparent;
+  cursor: pointer;
+}
+.slide::-webkit-scrollbar { width: 6px; }
+.slide::-webkit-scrollbar-track { background: transparent; }
+.slide::-webkit-scrollbar-thumb { background: var(--ocean-pale); border-radius: 3px; }
+.slide.active { display: flex; animation: fadeSlide 0.4s ease; }
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.slide-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-bottom: 0.75rem; border-bottom: 2px solid var(--ocean-pale);
+  margin-bottom: 1.5rem; flex-shrink: 0;
+}
+.slide-header .tag {
+  background: var(--ocean-deep); color: var(--white);
+  font-size: 0.7rem; font-weight: 600; padding: 0.25rem 0.75rem;
+  border-radius: 3px; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.slide-header .clo {
+  font-size: 0.7rem; color: var(--ocean-mid); font-weight: 600; letter-spacing: 0.06em;
+}
+.title-slide {
+  justify-content: center; align-items: center; text-align: center;
+  background: linear-gradient(170deg, var(--sand) 0%, var(--ocean-wash) 50%, var(--sand) 100%);
+  position: relative;
+}
+.title-slide::before {
+  content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(ellipse at 70% 20%, rgba(93,173,226,0.08) 0%, transparent 50%),
+              radial-gradient(ellipse at 30% 80%, rgba(231,76,60,0.04) 0%, transparent 50%);
+  pointer-events: none;
+}
+.title-slide .course-code {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--coral);
+  letter-spacing: 0.2em; font-weight: 600; margin-bottom: 1rem; position: relative;
+}
+.title-slide h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.2rem, 5vw, 3.8rem); color: var(--ocean-deep);
+  line-height: 1.15; margin-bottom: 0.5rem; position: relative;
+}
+.title-slide h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.4rem, 3vw, 2.2rem); color: var(--ocean-mid);
+  font-weight: 400; font-style: italic; margin-bottom: 2rem; position: relative;
+}
+.title-slide .subtitle { font-size: 1rem; color: var(--text-light); position: relative; }
+.title-slide .divider {
+  width: 80px; height: 3px;
+  background: linear-gradient(90deg, var(--coral), var(--gold));
+  border-radius: 2px; margin: 1.5rem auto; position: relative;
+}
+.q-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.3rem, 2.5vw, 1.7rem); color: var(--ocean-deep); margin-bottom: 1rem;
+}
+.q-number {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2.2rem; height: 2.2rem; background: var(--coral); color: var(--white);
+  font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.95rem;
+  border-radius: 50%; margin-right: 0.6rem; flex-shrink: 0;
+}
+.q-text {
+  font-size: 0.92rem; line-height: 1.7; color: var(--text-mid); margin-bottom: 0.75rem;
+  padding: 0.8rem 1rem; background: var(--white);
+  border-left: 3px solid var(--ocean-mid); border-radius: 0 6px 6px 0;
+}
+.reveal-step { display: none; animation: revealIn 0.35s ease; margin-bottom: 0.6rem; }
+.reveal-step.visible { display: block; }
+@keyframes revealIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.sub-q-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 600;
+  color: var(--coral); margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.4rem;
+}
+.sub-q-label::before { content: '▸'; color: var(--gold); }
+.sub-q-text {
+  font-size: 0.88rem; color: var(--text-mid); line-height: 1.65;
+  padding: 0.5rem 0.8rem; background: var(--gold-pale); border-radius: 5px;
+  border: 1px solid rgba(212,160,23,0.15);
+}
+.answer-block {
+  background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+  padding: 1rem 1.2rem; margin-top: 0.5rem; box-shadow: 0 2px 8px var(--shadow);
+}
+.answer-block h4 {
+  font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--ocean-mid); margin-bottom: 0.6rem; font-weight: 700;
+}
+.formula-box {
+  background: var(--ocean-deep); color: var(--white);
+  padding: 0.7rem 1rem; border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;
+  margin: 0.5rem 0; line-height: 1.6; overflow-x: auto;
+}
+.step {
+  font-size: 0.85rem; line-height: 1.7; color: var(--text-mid);
+  margin: 0.3rem 0; padding-left: 0.5rem;
+}
+.final-answer {
+  background: linear-gradient(135deg, var(--coral-pale), var(--gold-pale));
+  border: 2px solid var(--coral-soft); border-radius: 6px;
+  padding: 0.6rem 1rem; margin-top: 0.6rem;
+  font-weight: 600; color: var(--coral); font-size: 0.9rem;
+}
+.key-insight {
+  background: var(--ocean-wash); border-left: 3px solid var(--gold);
+  padding: 0.5rem 0.8rem; border-radius: 0 5px 5px 0;
+  font-size: 0.82rem; color: var(--ocean-deep); margin-top: 0.5rem; font-style: italic;
+}
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin: 0.5rem 0; }
+.data-table th {
+  background: var(--ocean-deep); color: var(--white);
+  padding: 0.45rem 0.6rem; text-align: center; font-weight: 600;
+  font-size: 0.75rem; letter-spacing: 0.03em;
+}
+.data-table td {
+  padding: 0.35rem 0.6rem; text-align: center;
+  border-bottom: 1px solid var(--border); font-size: 0.8rem;
+}
+.data-table tr:nth-child(even) { background: var(--off-white); }
+.data-table tr:hover { background: var(--ocean-wash); }
+.data-table .highlight-row { background: var(--gold-pale) !important; font-weight: 600; }
+.data-grid {
+  display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; margin: 0.5rem 0;
+}
+.data-grid span {
+  background: var(--white); border: 1px solid var(--border);
+  padding: 0.25rem; text-align: center; border-radius: 3px;
+}
+.chart-wrap {
+  max-width: 560px; margin: 0.6rem auto; background: var(--white);
+  border-radius: 8px; padding: 0.8rem; border: 1px solid var(--border);
+}
+.chart-wrap canvas { max-height: 280px; }
+.click-prompt {
+  position: fixed; bottom: 4.5rem; right: 2rem;
+  background: var(--ocean-mid); color: var(--white);
+  font-size: 0.72rem; padding: 0.35rem 0.9rem; border-radius: 20px;
+  animation: pulse 2s infinite; pointer-events: none; z-index: 50; font-weight: 500;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+.nav-bar {
+  position: fixed; bottom: 0; left: 0; width: 100%; height: 3.5rem;
+  background: var(--white); border-top: 2px solid var(--ocean-pale);
+  display: flex; align-items: center; justify-content: center; gap: 1rem;
+  z-index: 100; box-shadow: 0 -2px 12px var(--shadow);
+}
+.nav-btn {
+  background: var(--ocean-deep); color: var(--white); border: none;
+  padding: 0.5rem 1.4rem; border-radius: 5px;
+  font-family: 'Source Sans 3', sans-serif; font-size: 0.8rem;
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.nav-btn:hover { background: var(--ocean-mid); transform: translateY(-1px); }
+.nav-btn:disabled { background: var(--border); cursor: default; transform: none; }
+.slide-counter {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+  color: var(--text-light); min-width: 5rem; text-align: center;
+}
+.progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--coral), var(--gold));
+  transition: width 0.3s ease; z-index: 200;
+}
+.overview-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.8rem; margin-top: 1rem;
+}
+.overview-card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+  padding: 0.8rem; transition: all 0.2s; cursor: default;
+}
+.overview-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px var(--shadow-md); }
+.overview-card .oc-num { font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; font-weight: 700; color: var(--coral); }
+.overview-card .oc-title { font-size: 0.82rem; color: var(--text-mid); margin-top: 0.3rem; font-weight: 500; }
+.overview-card .oc-tag { font-size: 0.68rem; color: var(--ocean-mid); margin-top: 0.25rem; }
+.formula-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.8rem; margin-top: 1rem;
+}
+.formula-card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+  padding: 0.8rem 1rem;
+}
+.formula-card h4 { font-size: 0.78rem; color: var(--coral); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.formula-card .formula-box { margin: 0.3rem 0 0; font-size: 0.78rem; padding: 0.5rem 0.8rem; }
+.stem-leaf-table td:first-child {
+  font-weight: 700; background: var(--ocean-wash); text-align: right; padding-right: 0.6rem;
+}
+.stem-leaf-table td:nth-child(2) {
+  text-align: left; padding-left: 0.6rem; font-family: 'JetBrains Mono', monospace;
+}
+/* Skewness SVG */
+.skew-svg-wrap { max-width: 400px; margin: 0.5rem auto; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+@media (max-width: 768px) {
+  .slide { padding: 1.5rem 1.2rem 4.5rem; }
+  .data-grid { grid-template-columns: repeat(5, 1fr); font-size: 0.68rem; }
+  .data-table { font-size: 0.7rem; }
+  .data-table th, .data-table td { padding: 0.25rem 0.3rem; }
+  .formula-grid, .overview-grid { grid-template-columns: 1fr; }
+  .click-prompt { bottom: 4rem; right: 1rem; font-size: 0.65rem; }
+  .chart-wrap { max-width: 100%; }
+}
+@media (max-width: 480px) {
+  .slide { padding: 1rem 0.8rem 4.5rem; }
+  .q-title { font-size: 1.1rem; }
+}
+</style>
+</head>
+<body>
+<!-- PASSWORD SCREEN -->
+<div class="pw-overlay" id="pwOverlay">
+  <div class="pw-box">
+    <div class="pw-icon">🔒</div>
+    <h2>PRP1046 Tutorial 5</h2>
+    <p>Masukkan kata laluan untuk akses</p>
+    <div class="pw-input-wrap">
+      <input type="password" class="pw-input" id="pwInput" placeholder="Kata laluan..." autocomplete="off">
+    </div>
+    <button class="pw-submit" id="pwSubmit">Masuk</button>
+    <div class="pw-error-msg" id="pwError"></div>
+  </div>
+</div>
+<div class="progress-bar" id="progressBar"></div>
+<div class="click-prompt" id="clickPrompt">Click anywhere or press → to continue</div>
+
+<div class="presentation" id="presentation">
+
+<!-- ════════ SLIDE 1: TITLE ════════ -->
+<div class="slide title-slide active" data-slide="0">
+  <div class="course-code">PRP1046 MATHEMATICS 2</div>
+  <h1>Tutorial 5</h1>
+  <div class="divider"></div>
+  <h2>Data Description</h2>
+  <p class="subtitle">Learning Unit 5 — Complete Solutions &amp; Visualisations</p>
+</div>
+
+<!-- ════════ SLIDE 2: OVERVIEW ════════ -->
+<div class="slide" data-slide="1">
+  <div class="slide-header"><span class="tag">Overview</span><span class="clo">Learning Unit 5</span></div>
+  <h2 class="q-title">Topics Covered</h2>
+  <div class="overview-grid">
+    <div class="overview-card"><div class="oc-num">Q1</div><div class="oc-title">Statistical Terminology</div><div class="oc-tag">CLO 1 — Population, Sample, Parameter…</div></div>
+    <div class="overview-card"><div class="oc-num">Q2</div><div class="oc-title">Frequency &amp; Relative Frequency</div><div class="oc-tag">CLO 2 — Screw lengths</div></div>
+    <div class="overview-card"><div class="oc-num">Q3</div><div class="oc-title">Histogram &amp; Frequency Polygon</div><div class="oc-tag">CLO 2 — Suspended solids</div></div>
+    <div class="overview-card"><div class="oc-num">Q4</div><div class="oc-title">Cumulative Frequency &amp; Ogive</div><div class="oc-tag">CLO 2 — Exam marks</div></div>
+    <div class="overview-card"><div class="oc-num">Q5</div><div class="oc-title">Stem-and-Leaf Diagram</div><div class="oc-tag">CLO 2 — Cylinder diameters</div></div>
+    <div class="overview-card"><div class="oc-num">Q6</div><div class="oc-title">Ogive → Frequency Table</div><div class="oc-tag">CLO 2 — Height of 660 girls</div></div>
+    <div class="overview-card"><div class="oc-num">Q7</div><div class="oc-title">Mean, Mode &amp; Median</div><div class="oc-tag">CLO 2 — Pin lengths</div></div>
+    <div class="overview-card"><div class="oc-num">Q8</div><div class="oc-title">Quartile, Percentile, Variance, Skewness</div><div class="oc-tag">CLO 2 — Baby ages</div></div>
+    <div class="overview-card"><div class="oc-num">Q9</div><div class="oc-title">Mean, Std Dev &amp; CV</div><div class="oc-tag">CLO 2 — Exam marks (ungrouped)</div></div>
+    <div class="overview-card"><div class="oc-num">Q10</div><div class="oc-title">Past Year — Mean, Median, Mode, Skewness</div><div class="oc-tag">CLO 2 — Allowances</div></div>
+  </div>
+</div>
+
+<!-- ════════ SLIDE 3: Q1 ════════ -->
+<div class="slide" data-slide="2" data-steps="12">
+  <div class="slide-header"><span class="tag">Question 1</span><span class="clo">CLO 1</span></div>
+  <h2 class="q-title"><span class="q-number">1</span> Statistical Terminology</h2>
+  <div class="q-text">
+    Given the following statement:<br>
+    <em>'A study was conducted at a local college to analyze the average cumulative GPAs of students who graduated last year.'</em><br><br>
+    Determine the suitable terminology used in statistics to describe every phrase below.<br>
+    <strong>Hint:</strong> (Population / Statistic / Parameter / Sample / Variable / Data)
+  </div>
+  <div class="reveal-step" data-step="1"><div class="sub-q-label">(a)</div><div class="sub-q-text">all students who graduated from the college last year</div></div>
+  <div class="reveal-step" data-step="2"><div class="answer-block"><div class="final-answer">Answer (a): Population</div><div class="key-insight">The entire group of interest in the study.</div></div></div>
+  <div class="reveal-step" data-step="3"><div class="sub-q-label">(b)</div><div class="sub-q-text">the average cumulative GPA of students in the sample who graduated from the college last year</div></div>
+  <div class="reveal-step" data-step="4"><div class="answer-block"><div class="final-answer">Answer (b): Statistic</div><div class="key-insight">A numerical measurement describing a characteristic of a sample.</div></div></div>
+  <div class="reveal-step" data-step="5"><div class="sub-q-label">(c)</div><div class="sub-q-text">the average cumulative GPA of all students who graduated from the college last year</div></div>
+  <div class="reveal-step" data-step="6"><div class="answer-block"><div class="final-answer">Answer (c): Parameter</div><div class="key-insight">A numerical measurement describing a characteristic of the entire population.</div></div></div>
+  <div class="reveal-step" data-step="7"><div class="sub-q-label">(d)</div><div class="sub-q-text">a group of students who graduated from the college last year, randomly selected</div></div>
+  <div class="reveal-step" data-step="8"><div class="answer-block"><div class="final-answer">Answer (d): Sample</div><div class="key-insight">A subset of the population selected for study.</div></div></div>
+  <div class="reveal-step" data-step="9"><div class="sub-q-label">(e)</div><div class="sub-q-text">the cumulative GPA of one student who graduated from the college last year</div></div>
+  <div class="reveal-step" data-step="10"><div class="answer-block"><div class="final-answer">Answer (e): Variable</div><div class="key-insight">A characteristic or attribute that can assume different values.</div></div></div>
+  <div class="reveal-step" data-step="11"><div class="sub-q-label">(f)</div><div class="sub-q-text">Possible students' CGPA such as 3.65, 2.80, 1.50, 3.90 etc.</div></div>
+  <div class="reveal-step" data-step="12"><div class="answer-block"><div class="final-answer">Answer (f): Data</div><div class="key-insight">The actual values (measurements or observations) collected for the variable.</div></div></div>
+</div>
+
+<!-- ════════ SLIDE 4: Q2 ════════ -->
+<div class="slide" data-slide="3" data-steps="4">
+  <div class="slide-header"><span class="tag">Question 2</span><span class="clo">CLO 2</span></div>
+  <h2 class="q-title"><span class="q-number">2</span> Frequency &amp; Relative Frequency Distribution</h2>
+  <div class="q-text">
+    The data below reported the length of 50 screws (in millimetres) produced by a factory in every second.
+    <div class="data-grid" style="margin-top:0.5rem;">
+      <span>10</span><span>12</span><span>22</span><span>35</span><span>50</span><span>55</span><span>20</span><span>60</span><span>80</span><span>15</span>
+      <span>55</span><span>45</span><span>42</span><span>60</span><span>30</span><span>60</span><span>70</span><span>40</span><span>70</span><span>25</span>
+      <span>42</span><span>40</span><span>10</span><span>55</span><span>42</span><span>70</span><span>32</span><span>50</span><span>50</span><span>15</span>
+      <span>60</span><span>35</span><span>22</span><span>30</span><span>12</span><span>45</span><span>75</span><span>35</span><span>55</span><span>22</span>
+      <span>75</span><span>32</span><span>42</span><span>85</span><span>32</span><span>62</span><span>42</span><span>52</span><span>40</span><span>15</span>
+    </div>
+    (a) Construct a frequency distribution for the data using 10 – 19, 20 – 29 and so on as the class intervals.<br>
+    (b) Find the relative frequency of each class.
+  </div>
+  <div class="reveal-step" data-step="1"><div class="sub-q-label">(a) Frequency Distribution</div></div>
+  <div class="reveal-step" data-step="2">
+    <div class="answer-block">
+      <h4>Frequency Distribution Table</h4>
+      <table class="data-table">
+        <tr><th>Class Intervals</th><th>Frequency</th></tr>
+        <tr><td>10 – 19</td><td>7</td></tr>
+        <tr><td>20 – 29</td><td>5</td></tr>
+        <tr><td>30 – 39</td><td>8</td></tr>
+        <tr class="highlight-row"><td>40 – 49</td><td>10</td></tr>
+        <tr><td>50 – 59</td><td>8</td></tr>
+        <tr><td>60 – 69</td><td>5</td></tr>
+        <tr><td>70 – 79</td><td>5</td></tr>
+        <tr><td>80 – 89</td><td>2</td></tr>
+      </table>
+      <div class="key-insight">The modal class is 40 – 49 with the highest frequency of 10. Total = 50 screws.</div>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="3"><div class="sub-q-label">(b) Relative Frequency</div></div>
+  <div class="reveal-step" data-step="4">
+    <div class="answer-block">
+      <h4>Relative Frequency Table</h4>
+      <div class="formula-box">Relative Frequency = Frequency ÷ Total (n = 50)</div>
+      <table class="data-table">
+        <tr><th>Class Intervals</th><th>Frequency</th><th>Relative Frequency</th></tr>
+        <tr><td>10 – 19</td><td>7</td><td>7/50 = 0.14</td></tr>
+        <tr><td>20 – 29</td><td>5</td><td>5/50 = 0.10</td></tr>
+        <tr><td>30 – 39</td><td>8</td><td>8/50 = 0.16</td></tr>
+        <tr class="highlight-row"><td>40 – 49</td><td>10</td><td>10/50 = 0.20</td></tr>
+        <tr><td>50 – 59</td><td>8</td><td>8/50 = 0.16</td></tr>
+        <tr><td>60 – 69</td><td>5</td><td>5/50 = 0.10</td></tr>
+        <tr><td>70 – 79</td><td>5</td><td>5/50 = 0.10</td></tr>
+        <tr><td>80 – 89</td><td>2</td><td>2/50 = 0.04</td></tr>
+      </table>
+      <div class="final-answer">Sum of all relative frequencies = 1.00 ✓</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ SLIDE 5: Q3 ════════ -->
+<div class="slide" data-slide="4" data-steps="4">
+  <div class="slide-header"><span class="tag">Question 3</span><span class="clo">CLO 2</span></div>
+  <h2 class="q-title"><span class="q-number">3</span> Histogram &amp; Frequency Polygon</h2>
+  <div class="q-text">
+    The data given reported on the concentration of suspended solids (in parts per million, or ppm) for 50 different water catchment areas in Malaysia.
+    <div class="data-grid" style="margin-top:0.5rem;">
+      <span>55</span><span>31</span><span>37</span><span>91</span><span>65</span><span>42</span><span>33</span><span>60</span><span>76</span><span>69</span>
+      <span>45</span><span>39</span><span>35</span><span>56</span><span>44</span><span>71</span><span>61</span><span>61</span><span>47</span><span>74</span>
+      <span>83</span><span>40</span><span>31</span><span>36</span><span>62</span><span>47</span><span>90</span><span>56</span><span>33</span><span>68</span>
+      <span>75</span><span>71</span><span>91</span><span>52</span><span>58</span><span>48</span><span>61</span><span>78</span><span>39</span><span>65</span>
+      <span>60</span><span>77</span><span>59</span><span>49</span><span>41</span><span>93</span><span>64</span><span>35</span><span>87</span><span>66</span>
+    </div>
+    (a) By using 30 – 39, 40 – 49 and so on as the class intervals, construct a histogram for the data.<br>
+    (b) Construct a frequency polygon for the data. *Use separate graph paper for each graph.
+  </div>
+  <div class="reveal-step" data-step="1"><div class="sub-q-label">(a) Histogram</div><div class="sub-q-text">Construct a histogram using class boundaries.</div></div>
+  <div class="reveal-step" data-step="2">
+    <div class="answer-block">
+      <h4>Frequency Table with Class Boundaries</h4>
+      <table class="data-table">
+        <tr><th>Class Intervals</th><th>Frequency</th><th>Class Boundaries</th></tr>
+        <tr><td>30 – 39</td><td>10</td><td>29.5 – 39.5</td></tr>
+        <tr><td>40 – 49</td><td>9</td><td>39.5 – 49.5</td></tr>
+        <tr><td>50 – 59</td><td>6</td><td>49.5 – 59.5</td></tr>
+        <tr class="highlight-row"><td>60 – 69</td><td>12</td><td>59.5 – 69.5</td></tr>
+        <tr><td>70 – 79</td><td>7</td><td>69.5 – 79.5</td></tr>
+        <tr><td>80 – 89</td><td>2</td><td>79.5 – 89.5</td></tr>
+        <tr><td>90 – 99</td><td>4</td><td>89.5 – 99.5</td></tr>
+      </table>
+      <div class="chart-wrap"><canvas id="histogramQ3"></canvas></div>
+      <div class="key-insight">The histogram uses class boundaries on the x-axis so bars touch each other (no gaps). Total = 50.</div>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="3"><div class="sub-q-label">(b) Frequency Polygon</div><div class="sub-q-text">Plot frequency against class mark (midpoint) and connect the points. Must start and end at zero.</div></div>
+  <div class="reveal-step" data-step="4">
+    <div class="answer-block">
+      <h4>Frequency Table with Class Marks</h4>
+      <table class="data-table">
+        <tr><th>Class Intervals</th><th>Frequency</th><th>Class Mark</th></tr>
+        <tr><td>30 – 39</td><td>10</td><td>34.5</td></tr>
+        <tr><td>40 – 49</td><td>9</td><td>44.5</td></tr>
+        <tr><td>50 – 59</td><td>6</td><td>54.5</td></tr>
+        <tr class="highlight-row"><td>60 – 69</td><td>12</td><td>64.5</td></tr>
+        <tr><td>70 – 79</td><td>7</td><td>74.5</td></tr>
+        <tr><td>80 – 89</td><td>2</td><td>84.5</td></tr>
+        <tr><td>90 – 99</td><td>4</td><td>94.5</td></tr>
+      </table>
+      <div class="chart-wrap"><canvas id="polygonQ3"></canvas></div>
+      <div class="key-insight">⚠️ CORRECTED: The frequency polygon MUST start at (24.5, 0) and end at (104.5, 0) — one class width before the first and after the last class mark. This follows the correct marking scheme.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ SLIDE 6: Q4 ════════ -->
+<div class="slide" data-slide="5" data-steps="4">
+  <div class="slide-header"><span class="tag">Question 4</span><span class="clo">CLO 2</span></div>
+  <h2 class="q-title"><span class="q-number">4</span> Cumulative Frequency &amp; Ogive</h2>
+  <div class="q-text">
+    <strong>Table 1</strong> below shows the marks for the Mathematics mid-semester examination obtained by 20 Pre-University students.
+    <table class="data-table" style="margin-top:0.5rem;max-width:300px;">
+      <tr><th>Class Intervals</th><th>Frequency</th></tr>
+      <tr><td>30 – 39</td><td>1</td></tr><tr><td>40 – 49</td><td>2</td></tr>
+      <tr><td>50 – 59</td><td>7</td></tr><tr><td>60 – 69</td><td>6</td></tr>
+      <tr><td>70 – 79</td><td>3</td></tr><tr><td>80 – 89</td><td>1</td></tr>
+    </table>
+    (a) Find the cumulative frequency of each class.<br>
+    (b) Construct an ogive for the data.
+  </div>
+  <div class="reveal-step" data-step="1"><div class="sub-q-label">(a) Cumulative Frequency</div></div>
+  <div class="reveal-step" data-step="2">
+    <div class="answer-block">
+      <h4>Cumulative Frequency Table</h4>
+      <table class="data-table">
+        <tr><th>Class Intervals</th><th>Frequency</th><th>Cumulative Frequency</th></tr>
+        <tr><td>30 – 39</td><td>1</td><td>1</td></tr>
+        <tr><td>40 – 49</td><td>2</td><td>1 + 2 = 3</td></tr>
+        <tr><td>50 – 59</td><td>7</td><td>3 + 7 = 10</td></tr>
+        <tr><td>60 – 69</td><td>6</td><td>10 + 6 = 16</td></tr>
+        <tr><td>70 – 79</td><td>3</td><td>16 + 3 = 19</td></tr>
+        <tr><td>80 – 89</td><td>1</td><td>19 + 1 = 20</td></tr>
+      </table>
+      <div class="final-answer">Total cumulative frequency = 20 ✓ (matches total students)</div>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="3"><div class="sub-q-label">(b) Ogive (Less-Than Type)</div><div class="sub-q-text">Class boundaries are needed to construct less than ogive.</div></div>
+  <div class="reveal-step" data-step="4">
+    <div class="answer-block">
+      <h4>Class Boundaries &amp; Cumulative Frequency for Less Than Ogive</h4>
+      <table class="data-table">
+        <tr><th>Class Intervals</th><th>Class Boundaries</th><th>Freq.</th><th>Cum. Freq.</th></tr>
+        <tr><td>30 – 39</td><td>29.5 – 39.5</td><td>1</td><td>1</td></tr>
+        <tr><td>40 – 49</td><td>39.5 – 49.5</td><td>2</td><td>3</td></tr>
+        <tr><td>50 – 59</td><td>49.5 – 59.5</td><td>7</td><td>10</td></tr>
+        <tr><td>60 – 69</td><td>59.5 – 69.5</td><td>6</td><td>16</td></tr>
+        <tr><td>70 – 79</td><td>69.5 – 79.5</td><td>3</td><td>19</td></tr>
+        <tr><td>80 – 89</td><td>79.5 – 89.5</td><td>1</td><td>20</td></tr>
+      </table>
+      <div class="chart-wrap"><canvas id="ogiveQ4"></canvas></div>
+      <div class="key-insight">An ogive (less-than type) plots cumulative frequency against the upper class boundary. It starts at (29.5, 0) and always increases.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ SLIDE 7: Q5 ════════ -->
+<div class="slide" data-slide="6" data-steps="4">
+  <div class="slide-header"><span class="tag">Question 5</span><span class="clo">CLO 2</span></div>
+  <h2 class="q-title"><span class="q-number">5</span> Stem-and-Leaf Diagram</h2>
+  <div class="q-text">
+    <strong>Figure 1</strong> shows the stem-and-leaf diagram for the diameters (in centimetres) of 30 cylinders produced by a machine.
+    <table class="data-table stem-leaf-table" style="max-width:360px;margin-top:0.5rem;">
+      <tr><th>Stem</th><th>Leaf</th></tr>
+      <tr><td>35</td><td>0 4 8 9</td></tr>
+      <tr><td>36</td><td>2 2 4 6 6 7 7 9 9</td></tr>
+      <tr><td>37</td><td>0 2 3 4 4 8 9</td></tr>
+      <tr><td>38</td><td>0 4 5 6</td></tr>
+      <tr><td>39</td><td>3 4 8</td></tr>
+      <tr><td>40</td><td>0 2 6</td></tr>
+    </table>
+    <strong>Key:</strong> 35 | 9 means 3.59 cm<br>
+    (a) List the actual values from the diagram.<br>
+    (b) Construct a frequency distribution table by using exclusive class intervals 3.5 – 3.6, 3.6 – 3.7 and so on.
+  </div>
+  <div class="reveal-step" data-step="1"><div class="sub-q-label">(a) Actual Values</div></div>
+  <div class="reveal-step" data-step="2">
+    <div class="answer-block">
+      <h4>Actual Values from Stem-and-Leaf</h4>
+      <table class="data-table">
+        <tr><th>Stem</th><th>Leaf</th><th>Actual Values</th></tr>
+        <tr><td>35</td><td>0 4 8 9</td><td>3.50, 3.54, 3.58, 3.59</td></tr>
+        <tr><td>36</td><td>2 2 4 6 6 7 7 9 9</td><td>3.62, 3.62, 3.64, 3.66, 3.66, 3.67, 3.67, 3.69, 3.69</td></tr>
+        <tr><td>37</td><td>0 2 3 4 4 8 9</td><td>3.70, 3.72, 3.73, 3.74, 3.74, 3.78, 3.79</td></tr>
+        <tr><td>38</td><td>0 4 5 6</td><td>3.80, 3.84, 3.85, 3.86</td></tr>
+        <tr><td>39</td><td>3 4 8</td><td>3.93, 3.94, 3.98</td></tr>
+        <tr><td>40</td><td>0 2 6</td><td>4.00, 4.02, 4.06</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="3"><div class="sub-q-label">(b) Frequency Distribution (Exclusive)</div><div class="sub-q-text">In exclusive class intervals, the lower limit is included but the upper limit is excluded. E.g., 3.5 – 3.6 includes 3.5 but excludes 3.6.</div></div>
+  <div class="reveal-step" data-step="4">
+    <div class="answer-block">
+      <h4>Frequency Distribution Table</h4>
+      <table class="data-table">
+        <tr><th>Class Intervals</th><th>Frequency</th></tr>
+        <tr><td>3.5 – 3.6</td><td>4</td></tr>
+        <tr class="highlight-row"><td>3.6 – 3.7</td><td>9</td></tr>
+        <tr><td>3.7 – 3.8</td><td>7</td></tr>
+        <tr><td>3.8 – 3.9</td><td>4</td></tr>
+        <tr><td>3.9 – 4.0</td><td>3</td></tr>
+        <tr><td>4.0 – 4.1</td><td>3</td></tr>
+      </table>
+      <div class="final-answer">Total frequency = 30 ✓</div>
+      <div class="key-insight">Modal class: 3.6 – 3.7 (highest frequency = 9)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ SLIDE 8: Q6 ════════ -->
+<div class="slide" data-slide="7" data-steps="3">
+  <div class="slide-header"><span class="tag">Question 6</span><span class="clo">CLO 2</span></div>
+  <h2 class="q-title"><span class="q-number">6</span> Ogive → Frequency Distribution Table</h2>
+  <div class="q-text">
+    <strong>Figure 2</strong> shows an ogive for the height of 660 girls at SMK Arang Baru.<br><br>
+    The ogive was constructed from <strong>exclusive class intervals</strong>. Hence, construct a frequency distribution table for the data.
+    <div class="chart-wrap" style="margin-top:0.5rem;"><canvas id="ogiveQ6fig"></canvas></div>
+    <div style="font-size:0.78rem;color:var(--text-light);text-align:center;margin-top:0.3rem;">
+      Cumulative frequencies read from the ogive: (140, 0), (145, 11), (150, 42), (155, 120), (160, 254), (165, 427), (170, 571), (175, 646), (180, 660)
+    </div>
+  </div>
+  <div class="reveal-step" data-step="1"><div class="sub-q-label">Solution Strategy</div><div class="sub-q-text">Since it uses exclusive class intervals, class limits and class boundaries are equal. To find frequency, subtract consecutive cumulative frequencies.</div></div>
+  <div class="reveal-step" data-step="2">
+    <div class="answer-block">
+      <h4>Frequency Distribution Table</h4>
+      <div class="formula-box">Frequency = Current Cumulative Freq. − Previous Cumulative Freq.</div>
+      <table class="data-table">
+        <tr><th>Class Intervals (cm)</th><th>Calculation</th><th>Frequency</th></tr>
+        <tr><td>140 – 145</td><td>11 − 0</td><td>11</td></tr>
+        <tr><td>145 – 150</td><td>42 − 11</td><td>31</td></tr>
+        <tr><td>150 – 155</td><td>120 − 42</td><td>78</td></tr>
+        <tr><td>155 – 160</td><td>254 − 120</td><td>134</td></tr>
+        <tr class="highlight-row"><td>160 – 165</td><td>427 − 254</td><td>173</td></tr>
+        <tr><td>165 – 170</td><td>571 − 427</td><td>144</td></tr>
+        <tr><td>170 – 175</td><td>646 − 571</td><td>75</td></tr>
+        <tr><td>175 – 180</td><td>660 − 646</td><td>14</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="3">
+    <div class="final-answer">Total frequency = 11 + 31 + 78 + 134 + 173 + 144 + 75 + 14 = 660 ✓</div>
+    <div class="key-insight">Modal class: 160 – 165 cm (highest frequency = 173)</div>
+  </div>
+</div>
+
+<!-- ════════ SLIDE 9: Q7 ════════ -->
+<div class="slide" data-slide="8" data-steps="8">
+  <div class="slide-header"><span class="tag">Question 7</span><span class="clo">CLO 2</span></div>
+  <h2 class="q-title"><span class="q-number">7</span> Mean, Mode &amp; Median</h2>
+  <div class="q-text">
+    <strong>Table 2</strong> shows the length of a sample of 100 pins (in millimetres).
+    <table class="data-table" style="margin-top:0.5rem;max-width:320px;">
+      <tr><th>Length (mm)</th><th>Number of pins</th></tr>
+      <tr><td>20 – 23</td><td>10</td></tr><tr><td>24 – 27</td><td>18</td></tr>
+      <tr><td>28 – 31</td><td>31</td></tr><tr><td>32 – 35</td><td>16</td></tr>
+      <tr><td>36 – 39</td><td>13</td></tr><tr><td>40 – 43</td><td>8</td></tr>
+      <tr><td>44 – 47</td><td>4</td></tr>
+    </table>
+    Find the (a) mean, (b) mode, (c) median.
+  </div>
+  <div class="reveal-step" data-step="1"><div class="sub-q-label">Working Table</div></div>
+  <div class="reveal-step" data-step="2">
+    <div class="answer-block">
+      <h4>Extended Frequency Table</h4>
+      <table class="data-table" style="font-size:0.75rem;">
+        <tr><th>Length</th><th>f</th><th>Cum. f</th><th>x (midpoint)</th><th>fx</th><th>fx²</th></tr>
+        <tr><td>20–23</td><td>10</td><td>10</td><td>21.5</td><td>215</td><td>4622.5</td></tr>
+        <tr><td>24–27</td><td>18</td><td>28</td><td>25.5</td><td>459</td><td>11704.5</td></tr>
+        <tr class="highlight-row"><td>28–31</td><td>31</td><td>59</td><td>29.5</td><td>914.5</td><td>26977.75</td></tr>
+        <tr><td>32–35</td><td>16</td><td>75</td><td>33.5</td><td>536</td><td>17956</td></tr>
+        <tr><td>36–39</td><td>13</td><td>88</td><td>37.5</td><td>487.5</td><td>18281.25</td></tr>
+        <tr><td>40–43</td><td>8</td><td>96</td><td>41.5</td><td>332</td><td>13778</td></tr>
+        <tr><td>44–47</td><td>4</td><td>100</td><td>45.5</td><td>182</td><td>8281</td></tr>
+        <tr style="font-weight:700;background:var(--ocean-wash);"><td>Total</td><td>100</td><td>—</td><td>—</td><td>3126</td><td>101601</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="3"><div class="sub-q-label">(a) Mean</div></div>
+  <div class="reveal-step" data-step="4">
+    <div class="answer-block">
+      <div class="formula-box">Mean = Σfx / Σf = 3126 / 100</div>
+      <div class="final-answer">Mean = 31.26 mm</div>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="5"><div class="sub-q-label">(b) Mode</div></div>
+  <div class="reveal-step" data-step="6">
+    <div class="answer-block">
+      <h4>Modal Class: 28 – 31 (highest frequency = 31)</h4>
+      <div class="formula-box">Mode = L + (d₁ / (d₁ + d₂)) × c</div>
+      <div class="step">L = 27.5 (lower boundary)</div>
+      <div class="step">d₁ = 31 − 18 = 13 (freq difference with class before)</div>
+      <div class="step">d₂ = 31 − 16 = 15 (freq difference with class after)</div>
+      <div class="step">c = 4 (class width)</div>
+      <div class="step">Mode = 27.5 + (13 / (13 + 15)) × 4 = 27.5 + (13/28) × 4</div>
+      <div class="final-answer">Mode = 29.3571 mm</div>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="7"><div class="sub-q-label">(c) Median</div></div>
+  <div class="reveal-step" data-step="8">
+    <div class="answer-block">
+      <h4>Median is the (N/2)th = 50th observation → in class 28 – 31</h4>
+      <div class="formula-box">Median = L₂ + (c₂ / f₂) × (N/2 − Σf_b)</div>
+      <div class="step">L₂ = 27.5, c₂ = 31.5 − 27.5 = 4, f₂ = 31, Σf_b = 28, N = 100</div>
+      <div class="step">Median = 27.5 + (4/31) × (50 − 28) = 27.5 + (4/31) × 22</div>
+      <div class="final-answer">Median = 30.3387 mm</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ SLIDE 10: Q8 ════════ -->
+<div class="slide" data-slide="9" data-steps="12">
+  <div class="slide-header"><span class="tag">Question 8</span><span class="clo">CLO 2</span></div>
+  <h2 class="q-title"><span class="q-number">8</span> Quartile, Percentile, Variance &amp; Skewness</h2>
+  <div class="q-text">
+    <strong>Table 3</strong> displays the age of 24 babies (in months) taken from a child nursery.
+    <table class="data-table" style="margin-top:0.5rem;max-width:280px;">
+      <tr><th>Age (months)</th><th>No. of babies</th></tr>
+      <tr><td>2 – 7</td><td>2</td></tr><tr><td>7 – 12</td><td>6</td></tr>
+      <tr><td>12 – 17</td><td>11</td></tr><tr><td>17 – 22</td><td>2</td></tr>
+      <tr><td>22 – 27</td><td>3</td></tr>
+    </table>
+    Find (a) first quartile, (b) fortieth percentile, (c) variance, (d) standard deviation, (e) Pearson's coefficient of skewness and shape.
+  </div>
+  <div class="reveal-step" data-step="1"><div class="sub-q-label">Working Table</div></div>
+  <div class="reveal-step" data-step="2">
+    <div class="answer-block">
+      <h4>Extended Frequency Table</h4>
+      <table class="data-table" style="font-size:0.75rem;">
+        <tr><th>Age</th><th>f</th><th>Cum. f</th><th>x</th><th>fx</th><th>fx²</th></tr>
+        <tr><td>2–7</td><td>2</td><td>2</td><td>4.5</td><td>9</td><td>40.5</td></tr>
+        <tr><td>7–12</td><td>6</td><td>8</td><td>9.5</td><td>57</td><td>541.5</td></tr>
+        <tr class="highlight-row"><td>12–17</td><td>11</td><td>19</td><td>14.5</td><td>159.5</td><td>2312.75</td></tr>
+        <tr><td>17–22</td><td>2</td><td>21</td><td>19.5</td><td>39</td><td>760.5</td></tr>
+        <tr><td>22–27</td><td>3</td><td>24</td><td>24.5</td><td>73.5</td><td>1800.75</td></tr>
+        <tr style="font-weight:700;background:var(--ocean-wash);"><td>Total</td><td>24</td><td>—</td><td>—</td><td>338</td><td>5456</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="3"><div class="sub-q-label">(a) First Quartile Q₁</div></div>
+  <div class="reveal-step" data-step="4">
+    <div class="answer-block">
+      <div class="step">Q₁ is the (N/4)th = 6th observation → in class 7 – 12</div>
+      <div class="formula-box">Q₁ = L₁ + (c₁/f₁) × (N/4 − Σf_b₁)</div>
+      <div class="step">L₁ = 7, c₁ = 5, f₁ = 6, Σf_b₁ = 2, N = 24</div>
+      <div class="step">Q₁ = 7 + (5/6) × (6 − 2) = 7 + (5/6) × 4</div>
+      <div class="final-answer">Q₁ = 10.3333 months</div>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="5"><div class="sub-q-label">(b) 40th Percentile P₄₀</div></div>
+  <div class="reveal-step" data-step="6">
+    <div class="answer-block">
+      <div class="step">P₄₀ is the (40 × 24 / 100)th = 9.6th value → in class 12 – 17</div>
+      <div class="formula-box">P₄₀ = L₄₀ + (c₄₀/f₄₀) × (40N/100 − Σf_b₄₀)</div>
+      <div class="step">L₄₀ = 12, c₄₀ = 5, f₄₀ = 11, Σf_b₄₀ = 8</div>
+      <div class="step">P₄₀ = 12 + (5/11) × (9.6 − 8) = 12 + (5/11) × 1.6</div>
+      <div class="final-answer">P₄₀ = 12.7273 months</div>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="7"><div class="sub-q-label">(c) Variance</div></div>
+  <div class="reveal-step" data-step="8">
+    <div class="answer-block">
+      <div class="formula-box">s² = Σfx²/(Σf − 1) − (Σfx)²/[Σf(Σf − 1)]</div>
+      <div class="step">s² = 5456/(24 − 1) − (338)²/[24 × 23]</div>
+      <div class="step">s² = 5456/23 − 114244/552</div>
+      <div class="step">s² = 237.2174 − 206.9638</div>
+      <div class="final-answer">Variance s² = 30.2536</div>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="9"><div class="sub-q-label">(d) Standard Deviation</div></div>
+  <div class="reveal-step" data-step="10">
+    <div class="answer-block">
+      <div class="formula-box">s = √Variance = √30.2536</div>
+      <div class="final-answer">Standard Deviation s = 5.5</div>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="11"><div class="sub-q-label">(e) Pearson's Coefficient of Skewness</div></div>
+  <div class="reveal-step" data-step="12">
+    <div class="answer-block">
+      <div class="step"><strong>Mean</strong> = Σfx / Σf = 338/24 = 14.0833</div>
+      <div class="step"><strong>Mode:</strong> Modal class = 12 – 17 (highest f = 11)</div>
+      <div class="step">L = 12, d₁ = 11 − 6 = 5, d₂ = 11 − 2 = 9, c = 5</div>
+      <div class="step">Mode = 12 + (5/(5+9)) × 5 = 12 + (5/14) × 5 = 13.7857</div>
+      <div class="formula-box">Pearson's Sk = (Mean − Mode) / Std. Dev.<br>= (14.0833 − 13.7857) / 5.5</div>
+      <div class="final-answer">Sk = 0.0541 → Positively Skewed (Skewed to the right)</div>
+      <div class="key-insight">Since Sk > 0, the distribution is positively skewed: Mode &lt; Median &lt; Mean</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ SLIDE 11: Q9 ════════ -->
+<div class="slide" data-slide="10" data-steps="4">
+  <div class="slide-header"><span class="tag">Question 9</span><span class="clo">CLO 2</span></div>
+  <h2 class="q-title"><span class="q-number">9</span> Mean, Standard Deviation &amp; Coefficient of Variation</h2>
+  <div class="q-text">
+    In a mid-semester examination, the total marks that Aishah obtained for all her 10 subjects, ΣM = 650, while the total squared of her mark, ΣM² = 43000.<br>
+    (a) Find the mean and standard deviation for her marks.<br>
+    (b) Calculate the coefficient of variation for her marks.
+  </div>
+  <div class="reveal-step" data-step="1"><div class="sub-q-label">(a) Mean &amp; Standard Deviation</div></div>
+  <div class="reveal-step" data-step="2">
+    <div class="answer-block">
+      <div class="step">ΣM = 650, ΣM² = 43000, n = 10</div>
+      <div class="formula-box">Mean = ΣM / n = 650 / 10 = 65</div>
+      <div class="formula-box">Variance s² = ΣM²/(n−1) − (ΣM)²/[n(n−1)]<br>= 43000/9 − (650)²/(10 × 9)<br>= 4777.78 − 4694.44</div>
+      <div class="step">Variance = 83.3334</div>
+      <div class="step">Standard Deviation s = √83.3334</div>
+      <div class="final-answer">Mean = 65 &nbsp;|&nbsp; Standard Deviation s = 9.1287</div>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="3"><div class="sub-q-label">(b) Coefficient of Variation</div></div>
+  <div class="reveal-step" data-step="4">
+    <div class="answer-block">
+      <div class="formula-box">CV = (s / Mean) × 100%<br>= (9.1287 / 65) × 100%</div>
+      <div class="final-answer">Coefficient of Variation = 14.0442%</div>
+      <div class="key-insight">A CV of ~14% indicates moderate variability in Aishah's marks across subjects.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ SLIDE 12–13: Q10 ════════ -->
+<div class="slide" data-slide="11" data-steps="6">
+  <div class="slide-header"><span class="tag">Question 10 (a)</span><span class="clo">CLO 2 — Past Year</span></div>
+  <h2 class="q-title"><span class="q-number">10</span> Past Year: Mean, Median, Mode &amp; Skewness</h2>
+  <div class="q-text">
+    <strong>Table 4</strong> shows the distribution of allowances given to several poor students in a school.
+    <table class="data-table" style="margin-top:0.5rem;max-width:340px;">
+      <tr><th>Allowances (RM)</th><th>Number of students</th></tr>
+      <tr><td>100 ≤ x &lt; 200</td><td>12</td></tr>
+      <tr><td>200 ≤ x &lt; 300</td><td>7</td></tr>
+      <tr><td>300 ≤ x &lt; 400</td><td>8</td></tr>
+      <tr><td>400 ≤ x &lt; 500</td><td>k</td></tr>
+      <tr><td>500 ≤ x &lt; 600</td><td>2</td></tr>
+    </table>
+    (a) If the mean of the allowances is RM275, find the value of k. [3 marks]
+  </div>
+  <div class="reveal-step" data-step="1"><div class="sub-q-label">Working Table</div></div>
+  <div class="reveal-step" data-step="2">
+    <div class="answer-block">
+      <h4>Extended Frequency Table</h4>
+      <table class="data-table" style="font-size:0.75rem;">
+        <tr><th>Allowances (RM)</th><th>f</th><th>x</th><th>fx</th></tr>
+        <tr><td>100 ≤ x &lt; 200</td><td>12</td><td>150</td><td>1800</td></tr>
+        <tr><td>200 ≤ x &lt; 300</td><td>7</td><td>250</td><td>1750</td></tr>
+        <tr><td>300 ≤ x &lt; 400</td><td>8</td><td>350</td><td>2800</td></tr>
+        <tr><td>400 ≤ x &lt; 500</td><td>k</td><td>450</td><td>450k</td></tr>
+        <tr><td>500 ≤ x &lt; 600</td><td>2</td><td>550</td><td>1100</td></tr>
+        <tr style="font-weight:700;background:var(--ocean-wash);"><td>Total</td><td>29 + k</td><td>—</td><td>7450 + 450k</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="3"><div class="sub-q-label">(a) Finding k</div></div>
+  <div class="reveal-step" data-step="4">
+    <div class="answer-block">
+      <div class="formula-box">Mean = Σfx / Σf<br>275 = (7450 + 450k) / (29 + k)</div>
+      <div class="step">275(29 + k) = 7450 + 450k</div>
+      <div class="step">7975 + 275k = 7450 + 450k</div>
+      <div class="step">7975 − 7450 = 450k − 275k</div>
+      <div class="step">525 = 175k</div>
+      <div class="final-answer">k = 3</div>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="5"><div class="sub-q-label">Updated Table (k = 3)</div></div>
+  <div class="reveal-step" data-step="6">
+    <div class="answer-block">
+      <div class="chart-wrap"><canvas id="barQ10"></canvas></div>
+      <div class="key-insight">With k = 3: Total students = 32. Σfx = 8800. Mean = 8800/32 = 275 ✓</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ SLIDE 13: Q10 (b) ════════ -->
+<div class="slide" data-slide="12" data-steps="6">
+  <div class="slide-header"><span class="tag">Question 10 (b)</span><span class="clo">CLO 2 — Past Year</span></div>
+  <h2 class="q-title"><span class="q-number">10</span> Median, Mode &amp; Distribution Shape</h2>
+  <div class="q-text">
+    (b) Find the median and mode for the allowances. By comparing the value of mean, mode and median, state the type of this distribution. [7 marks]
+  </div>
+  <div class="reveal-step" data-step="1"><div class="sub-q-label">Median</div></div>
+  <div class="reveal-step" data-step="2">
+    <div class="answer-block">
+      <div class="step">Median is the (N/2)th = 16th observation → in class 200 – 300</div>
+      <table class="data-table" style="font-size:0.75rem;max-width:400px;">
+        <tr><th>Class</th><th>f</th><th>Cum. f</th></tr>
+        <tr class="highlight-row"><td>100 – 200</td><td>12</td><td>12</td></tr>
+        <tr style="background:var(--gold-pale);"><td>200 – 300</td><td>7</td><td>19</td></tr>
+        <tr><td>300 – 400</td><td>8</td><td>27</td></tr>
+        <tr><td>400 – 500</td><td>3</td><td>30</td></tr>
+        <tr><td>500 – 600</td><td>2</td><td>32</td></tr>
+      </table>
+      <div class="formula-box">Median = L₂ + (c₂/f₂) × (N/2 − Σf_b)<br>= 200 + (100/7) × (16 − 12)<br>= 200 + (100/7) × 4</div>
+      <div class="final-answer">Median = 257.14</div>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="3"><div class="sub-q-label">Mode</div></div>
+  <div class="reveal-step" data-step="4">
+    <div class="answer-block">
+      <div class="step">Modal class: 100 – 200 (highest frequency = 12)</div>
+      <div class="formula-box">Mode = L + (d₁/(d₁ + d₂)) × c</div>
+      <div class="step">L = 100, d₁ = 12 − 0 = 12 (no class before), d₂ = 12 − 7 = 5, c = 100</div>
+      <div class="step">Mode = 100 + (12/(12+5)) × 100 = 100 + (12/17) × 100</div>
+      <div class="final-answer">Mode = 170.58</div>
+    </div>
+  </div>
+  <div class="reveal-step" data-step="5"><div class="sub-q-label">Type of Distribution</div></div>
+  <div class="reveal-step" data-step="6">
+    <div class="answer-block">
+      <h4>Comparing: Mode &lt; Median &lt; Mean</h4>
+      <div class="step">Mode = 170.58 &lt; Median = 257.14 &lt; Mean = 275</div>
+      <div class="final-answer">∴ The distribution is positively skewed (skewed to the right)</div>
+      <div class="skew-svg-wrap" id="skewSvgQ10"></div>
+      <div class="key-insight">When Mode &lt; Median &lt; Mean, the tail extends to the right. The peak is on the left side with the tail tapering off to the right.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ SLIDE 14: Q10 SKEWNESS VISUAL ════════ -->
+<div class="slide" data-slide="13">
+  <div class="slide-header"><span class="tag">Skewness Reference</span><span class="clo">CLO 2</span></div>
+  <h2 class="q-title">Understanding Distribution Shapes</h2>
+  <div class="two-col">
+    <div class="answer-block">
+      <h4>Positively Skewed (Q10 Result)</h4>
+      <div id="posskewsvg" style="width:100%;"></div>
+      <div class="step" style="margin-top:0.5rem;"><strong>Mode &lt; Median &lt; Mean</strong></div>
+      <div class="step">Peak on LEFT, tail extends RIGHT</div>
+      <div class="step">Sk &gt; 0</div>
+    </div>
+    <div class="answer-block">
+      <h4>Negatively Skewed</h4>
+      <div id="negskewsvg" style="width:100%;"></div>
+      <div class="step" style="margin-top:0.5rem;"><strong>Mean &lt; Median &lt; Mode</strong></div>
+      <div class="step">Peak on RIGHT, tail extends LEFT</div>
+      <div class="step">Sk &lt; 0</div>
+    </div>
+  </div>
+  <div class="answer-block" style="margin-top:1rem;">
+    <h4>Symmetric (Normal)</h4>
+    <div class="step"><strong>Mean = Median = Mode</strong> &nbsp;|&nbsp; Sk = 0 &nbsp;|&nbsp; Bell-shaped, balanced on both sides</div>
+  </div>
+</div>
+
+<!-- ════════ SLIDE 15: FORMULA SUMMARY ════════ -->
+<div class="slide" data-slide="14">
+  <div class="slide-header"><span class="tag">Formula Summary</span><span class="clo">Reference</span></div>
+  <h2 class="q-title">Key Formulae</h2>
+  <div class="formula-grid">
+    <div class="formula-card"><h4>Mean (Grouped)</h4><div class="formula-box">x̄ = Σfx / Σf</div></div>
+    <div class="formula-card"><h4>Mode (Grouped)</h4><div class="formula-box">Mode = L + (d₁/(d₁+d₂)) × c<br>d₁ = f_modal − f_before<br>d₂ = f_modal − f_after</div></div>
+    <div class="formula-card"><h4>Median (Grouped)</h4><div class="formula-box">Q₂ = L₂ + (c₂/f₂)(N/2 − Σf_b)</div></div>
+    <div class="formula-card"><h4>Quartiles</h4><div class="formula-box">Q₁ → N/4<br>Q₂ → N/2<br>Q₃ → 3N/4</div></div>
+    <div class="formula-card"><h4>Percentile</h4><div class="formula-box">Pₖ = L + (c/f)(kN/100 − Σf_b)</div></div>
+    <div class="formula-card"><h4>Variance</h4><div class="formula-box">s² = Σfx²/(n−1) − (Σfx)²/[n(n−1)]</div></div>
+    <div class="formula-card"><h4>Std Dev &amp; CV</h4><div class="formula-box">s = √Variance<br>CV = (s / x̄) × 100%</div></div>
+    <div class="formula-card"><h4>Pearson's Skewness</h4><div class="formula-box">Sk = (Mean − Mode) / s<br>Sk &gt; 0 → Positive<br>Sk &lt; 0 → Negative</div></div>
+  </div>
+</div>
+
+<!-- ════════ SLIDE 16: CLOSING ════════ -->
+<div class="slide title-slide" data-slide="15">
+  <div class="course-code">PRP1046 MATHEMATICS 2</div>
+  <h1>Tutorial 5 Complete</h1>
+  <div class="divider"></div>
+  <h2>Data Description</h2>
+  <p class="subtitle">Good luck with your studies! 🌊</p>
+</div>
+
+</div><!-- end .presentation -->
+
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn" onclick="event.stopPropagation(); navigate(-1);">◀ Prev</button>
+  <span class="slide-counter" id="slideCounter">1 / 16</span>
+  <button class="nav-btn" id="nextBtn">Next ▶</button>
+  <button class="theme-toggle" id="themeToggle" onclick="event.stopPropagation(); toggleTheme();" title="Toggle Dark/Light Mode">
+    <span class="icon-moon">🌙</span>
+    <span class="icon-sun">☀️</span>
+  </button>
+</div>
+
+<script>
+// ── PASSWORD PROTECTION ──
+(function() {
+  const H = 'f4c8a1b7d3e9'; // just an obfuscation marker
+  const overlay = document.getElementById('pwOverlay');
+  const inp = document.getElementById('pwInput');
+  const btn = document.getElementById('pwSubmit');
+  const err = document.getElementById('pwError');
+  // Hide main content until authenticated
+  document.getElementById('progressBar').style.display = 'none';
+  document.getElementById('clickPrompt').style.display = 'none';
+  document.getElementById('presentation').style.display = 'none';
+  document.querySelector('.nav-bar').style.display = 'none';
+
+  function checkPw() {
+    const v = inp.value;
+    // Simple encode to avoid plain text in source
+    if (btoa(v) === btoa(atob('QW4xNTEyMDQ2NyMj'))) {
+      overlay.classList.add('hidden');
+      document.getElementById('progressBar').style.display = '';
+      document.getElementById('clickPrompt').style.display = '';
+      document.getElementById('presentation').style.display = '';
+      document.querySelector('.nav-bar').style.display = '';
+      try { sessionStorage.setItem('t5auth','1'); } catch(e) {}
+    } else {
+      inp.classList.add('error');
+      err.textContent = 'Kata laluan salah. Cuba lagi.';
+      setTimeout(() => { inp.classList.remove('error'); }, 500);
+    }
+  }
+  btn.addEventListener('click', function(e) { e.stopPropagation(); checkPw(); });
+  inp.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.stopPropagation(); checkPw(); } });
+  // Allow session persistence so refresh doesn't re-ask
+  try {
+    if (sessionStorage.getItem('t5auth') === '1') {
+      overlay.classList.add('hidden');
+      document.getElementById('progressBar').style.display = '';
+      document.getElementById('clickPrompt').style.display = '';
+      document.getElementById('presentation').style.display = '';
+      document.querySelector('.nav-bar').style.display = '';
+    }
+  } catch(e) {}
+})();
+
+// ── DARK MODE TOGGLE ──
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  try { localStorage.setItem('tutorial5-theme', isDark ? 'light' : 'dark'); } catch(e) {}
+  updateChartColors();
+}
+// Load saved preference or detect system pref
+(function() {
+  let saved = null;
+  try { saved = localStorage.getItem('tutorial5-theme'); } catch(e) {}
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+})();
+
+function updateChartColors() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const textColor = isDark ? '#c9d1d9' : '#1b2631';
+  const gridColor = isDark ? '#30363d' : '#e5e5e5';
+  Object.values(Chart.instances).forEach(chart => {
+    if (chart.options.plugins.title) chart.options.plugins.title.color = textColor;
+    ['x','y'].forEach(axis => {
+      if (chart.options.scales[axis]) {
+        if (chart.options.scales[axis].title) chart.options.scales[axis].title.color = textColor;
+        chart.options.scales[axis].ticks = chart.options.scales[axis].ticks || {};
+        chart.options.scales[axis].ticks.color = textColor;
+        chart.options.scales[axis].grid = chart.options.scales[axis].grid || {};
+        chart.options.scales[axis].grid.color = gridColor;
+      }
+    });
+    chart.update();
+  });
+}
+
+// ── STATE ──
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 0;
+let currentStep = 0;
+const chartsDrawn = {};
+
+function getMaxSteps(idx) { return parseInt(slides[idx].getAttribute('data-steps') || '0'); }
+
+function updateUI() {
+  slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
+  document.getElementById('slideCounter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+  document.getElementById('prevBtn').disabled = (currentSlide === 0 && currentStep === 0);
+  document.getElementById('progressBar').style.width = `${((currentSlide) / (totalSlides - 1)) * 100}%`;
+  const prompt = document.getElementById('clickPrompt');
+  if (currentSlide === 0) { prompt.textContent = 'Click anywhere or press → to start'; }
+  else if (currentSlide === totalSlides - 1 && currentStep >= getMaxSteps(currentSlide)) { prompt.textContent = 'End of presentation'; }
+  else { prompt.textContent = 'Click anywhere or press → to continue'; }
+  drawChartsIfNeeded(currentSlide);
+  drawSkewSVGs();
+  // Apply dark mode colors to any newly drawn charts
+  if (document.documentElement.getAttribute('data-theme') === 'dark') updateChartColors();
+}
+
+function revealStep(slideIdx, step) {
+  const s = slides[slideIdx];
+  const el = s.querySelector(`.reveal-step[data-step="${step}"]`);
+  if (el) {
+    el.classList.add('visible');
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function hideStepsAfter(slideIdx, step) {
+  const s = slides[slideIdx];
+  s.querySelectorAll('.reveal-step').forEach(el => {
+    if (parseInt(el.getAttribute('data-step')) > step) el.classList.remove('visible');
+  });
+}
+
+function navigate(dir) {
+  if (dir === 1) {
+    if (currentSlide < totalSlides - 1) {
+      currentSlide++;
+      currentStep = 0;
+      slides[currentSlide].querySelectorAll('.reveal-step').forEach(el => el.classList.remove('visible'));
+    }
+  } else {
+    if (currentStep > 0) {
+      currentStep--;
+      hideStepsAfter(currentSlide, currentStep);
+    } else if (currentSlide > 0) {
+      currentSlide--;
+      const max = getMaxSteps(currentSlide);
+      currentStep = max;
+      slides[currentSlide].querySelectorAll('.reveal-step').forEach(el => {
+        if (parseInt(el.getAttribute('data-step')) <= max) el.classList.add('visible');
+      });
+    }
+  }
+  updateUI();
+}
+
+function handleNext() {
+  const max = getMaxSteps(currentSlide);
+  if (currentStep < max) {
+    currentStep++;
+    revealStep(currentSlide, currentStep);
+    updateUI();
+  } else {
+    navigate(1);
+  }
+}
+
+// ── EVENT LISTENERS ──
+document.addEventListener('contextmenu', e => { e.preventDefault(); navigate(-1); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); handleNext(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); navigate(-1); }
+});
+
+let touchX = 0;
+document.addEventListener('touchstart', e => { touchX = e.changedTouches[0].screenX; }, { passive: true });
+document.addEventListener('touchend', e => {
+  const d = e.changedTouches[0].screenX - touchX;
+  if (d < -50) handleNext();
+  if (d > 50) navigate(-1);
+}, { passive: true });
+
+// ── CHARTS ──
+function drawChartsIfNeeded(idx) {
+  // Q3 Histogram (slide 4)
+  if (idx === 4 && !chartsDrawn['hist3']) {
+    const c = document.getElementById('histogramQ3');
+    if (c && c.offsetParent !== null) {
+      new Chart(c, {
+        type: 'bar',
+        data: {
+          labels: ['29.5–39.5','39.5–49.5','49.5–59.5','59.5–69.5','69.5–79.5','79.5–89.5','89.5–99.5'],
+          datasets: [{ label: 'Frequency', data: [10,9,6,12,7,2,4],
+            backgroundColor: 'rgba(41,128,185,0.7)', borderColor: '#1a5276', borderWidth: 1,
+            barPercentage: 1, categoryPercentage: 1 }]
+        },
+        options: {
+          responsive: true,
+          plugins: { title: { display: true, text: 'Histogram: Concentration of Suspended Solids (50 rivers)', font: { size: 12 }, color: '#1a5276' }, legend: { display: false } },
+          scales: { x: { title: { display: true, text: 'Concentration (ppm)' } }, y: { title: { display: true, text: 'No of rivers' }, beginAtZero: true } }
+        }
+      });
+      chartsDrawn['hist3'] = true;
+    }
+  }
+  // Q3 Frequency Polygon — CORRECTED (starts/ends at 0)
+  if (idx === 4 && !chartsDrawn['poly3']) {
+    const c = document.getElementById('polygonQ3');
+    if (c && c.offsetParent !== null) {
+      new Chart(c, {
+        type: 'line',
+        data: {
+          labels: ['24.5','34.5','44.5','54.5','64.5','74.5','84.5','94.5','104.5'],
+          datasets: [{ label: 'Frequency', data: [0,10,9,6,12,7,2,4,0],
+            borderColor: '#2980b9', backgroundColor: 'rgba(41,128,185,0.08)',
+            pointBackgroundColor: '#e74c3c', pointRadius: 5, pointBorderColor: '#e74c3c',
+            fill: false, tension: 0 }]
+        },
+        options: {
+          responsive: true,
+          plugins: { title: { display: true, text: 'Frequency polygon for the concentration of suspended solids for 50 rivers', font: { size: 11 }, color: '#1a5276' }, legend: { display: false } },
+          scales: { x: { offset: true, title: { display: true, text: 'Concentration' } }, y: { title: { display: true, text: 'No of rivers' }, beginAtZero: true, max: 14 } }
+        }
+      });
+      chartsDrawn['poly3'] = true;
+    }
+  }
+  // Q4 Ogive
+  if (idx === 5 && !chartsDrawn['ogive4']) {
+    const c = document.getElementById('ogiveQ4');
+    if (c && c.offsetParent !== null) {
+      new Chart(c, {
+        type: 'line',
+        data: {
+          labels: ['29.5','39.5','49.5','59.5','69.5','79.5','89.5'],
+          datasets: [{ label: 'Cum. Freq.', data: [0,1,3,10,16,19,20],
+            borderColor: '#e74c3c', backgroundColor: 'rgba(231,76,60,0.05)',
+            pointBackgroundColor: '#5dade2', pointBorderColor: '#5dade2',
+            pointRadius: 5, fill: false, tension: 0.3, borderWidth: 2.5 }]
+        },
+        options: {
+          responsive: true,
+          plugins: { title: { display: true, text: 'Ogive for the marks of the Mathematics mid-semester examination for 20 Pre-University students.', font: { size: 10 }, color: '#1a5276' }, legend: { display: false } },
+          scales: { x: { offset: true, title: { display: true, text: 'Marks' } }, y: { title: { display: true, text: 'Cumulative Frequency' }, beginAtZero: true, max: 25 } }
+        }
+      });
+      chartsDrawn['ogive4'] = true;
+    }
+  }
+  // Q6 Ogive figure (height of 660 girls)
+  if (idx === 7 && !chartsDrawn['ogive6fig']) {
+    const c = document.getElementById('ogiveQ6fig');
+    if (c && c.offsetParent !== null) {
+      new Chart(c, {
+        type: 'line',
+        data: {
+          labels: ['140','145','150','155','160','165','170','175','180'],
+          datasets: [{ label: 'Cum. Freq.', data: [0,11,42,120,254,427,571,646,660],
+            borderColor: '#1a5276', backgroundColor: 'rgba(41,128,185,0.06)',
+            pointBackgroundColor: '#e74c3c', pointBorderColor: '#2980b9',
+            pointRadius: 5, fill: true, tension: 0.3, borderWidth: 2.5 }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: { display: true, text: 'Ogive for the Height of 660 Girls', font: { size: 12, weight: 'bold' }, color: '#1a5276' },
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => `Cumulative Frequency: ${ctx.parsed.y}` } }
+          },
+          scales: {
+            x: { title: { display: true, text: 'Upper boundary for height (cm)' } },
+            y: { title: { display: true, text: 'Cumulative frequency' }, beginAtZero: true, max: 700 }
+          }
+        }
+      });
+      chartsDrawn['ogive6fig'] = true;
+    }
+  }
+  // Q10 Bar chart
+  if (idx === 11 && !chartsDrawn['bar10']) {
+    const c = document.getElementById('barQ10');
+    if (c && c.offsetParent !== null) {
+      new Chart(c, {
+        type: 'bar',
+        data: {
+          labels: ['100–200','200–300','300–400','400–500','500–600'],
+          datasets: [{ label: 'Students', data: [12,7,8,3,2],
+            backgroundColor: ['rgba(231,76,60,0.7)','rgba(41,128,185,0.7)','rgba(212,160,23,0.7)','rgba(93,173,226,0.7)','rgba(241,148,138,0.7)'],
+            borderColor: '#1a5276', borderWidth: 1 }]
+        },
+        options: {
+          responsive: true,
+          plugins: { title: { display: true, text: 'Distribution of Allowances (RM) — k = 3', font: { size: 12 }, color: '#1a5276' }, legend: { display: false } },
+          scales: { x: { title: { display: true, text: 'Allowances (RM)' } }, y: { title: { display: true, text: 'Number of Students' }, beginAtZero: true } }
+        }
+      });
+      chartsDrawn['bar10'] = true;
+    }
+  }
+}
+
+// ── SKEWNESS SVG DRAWINGS ──
+let skewDrawn = false;
+function drawSkewSVGs() {
+  if (skewDrawn) return;
+  // Q10(b) in-slide skew diagram
+  const q10wrap = document.getElementById('skewSvgQ10');
+  if (q10wrap && !q10wrap.innerHTML) {
+    q10wrap.innerHTML = createPositiveSkewSVG(360, 160);
+  }
+  // Slide 13 reference diagrams
+  const posWrap = document.getElementById('posskewsvg');
+  const negWrap = document.getElementById('negskewsvg');
+  if (posWrap && !posWrap.innerHTML) {
+    posWrap.innerHTML = createPositiveSkewSVG(320, 150);
+  }
+  if (negWrap && !negWrap.innerHTML) {
+    negWrap.innerHTML = createNegativeSkewSVG(320, 150);
+  }
+  if (posWrap && posWrap.innerHTML && negWrap && negWrap.innerHTML) skewDrawn = true;
+}
+
+function createPositiveSkewSVG(w, h) {
+  return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:${w}px;">
+    <!-- Axes -->
+    <line x1="30" y1="${h-25}" x2="${w-10}" y2="${h-25}" stroke="#1a5276" stroke-width="1.5"/>
+    <!-- Positively skewed curve: peak on LEFT, tail extends RIGHT -->
+    <path d="M 40,${h-25} Q 60,${h-30} 80,${h-100} Q 95,${h-145} 110,${h-100} Q 140,${h-50} 200,${h-35} Q 260,${h-28} ${w-20},${h-25}" fill="rgba(41,128,185,0.12)" stroke="#2980b9" stroke-width="2.5" fill-opacity="0.5"/>
+    <!-- Mode line (leftmost, at peak) -->
+    <line x1="95" y1="${h-140}" x2="95" y2="${h-25}" stroke="#e74c3c" stroke-width="2" stroke-dasharray="0"/>
+    <text x="95" y="${h-143}" text-anchor="middle" font-size="10" fill="#e74c3c" font-weight="700">Mode</text>
+    <!-- Median line (middle) -->
+    <line x1="125" y1="${h-90}" x2="125" y2="${h-25}" stroke="#d4a017" stroke-width="2" stroke-dasharray="5,3"/>
+    <text x="125" y="${h-93}" text-anchor="middle" font-size="10" fill="#d4a017" font-weight="700">Median</text>
+    <!-- Mean line (rightmost) -->
+    <line x1="160" y1="${h-55}" x2="160" y2="${h-25}" stroke="#1a5276" stroke-width="2" stroke-dasharray="3,3"/>
+    <text x="160" y="${h-58}" text-anchor="middle" font-size="10" fill="#1a5276" font-weight="700">Mean</text>
+    <text x="${w/2}" y="${h-5}" text-anchor="middle" font-size="10" fill="#566573">Mode &lt; Median &lt; Mean → Positively Skewed</text>
+  </svg>`;
+}
+
+function createNegativeSkewSVG(w, h) {
+  return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:${w}px;">
+    <line x1="10" y1="${h-25}" x2="${w-30}" y2="${h-25}" stroke="#1a5276" stroke-width="1.5"/>
+    <!-- Negatively skewed curve: peak on RIGHT, tail extends LEFT -->
+    <path d="M 20,${h-25} Q 80,${h-28} 140,${h-35} Q 180,${h-50} 210,${h-100} Q 225,${h-145} 240,${h-100} Q 260,${h-30} ${w-35},${h-25}" fill="rgba(231,76,60,0.12)" stroke="#e74c3c" stroke-width="2.5" fill-opacity="0.5"/>
+    <!-- Mean (leftmost) -->
+    <line x1="160" y1="${h-55}" x2="160" y2="${h-25}" stroke="#1a5276" stroke-width="2" stroke-dasharray="3,3"/>
+    <text x="160" y="${h-58}" text-anchor="middle" font-size="10" fill="#1a5276" font-weight="700">Mean</text>
+    <!-- Median (middle) -->
+    <line x1="195" y1="${h-90}" x2="195" y2="${h-25}" stroke="#d4a017" stroke-width="2" stroke-dasharray="5,3"/>
+    <text x="195" y="${h-93}" text-anchor="middle" font-size="10" fill="#d4a017" font-weight="700">Median</text>
+    <!-- Mode (rightmost, at peak) -->
+    <line x1="225" y1="${h-140}" x2="225" y2="${h-25}" stroke="#e74c3c" stroke-width="2"/>
+    <text x="225" y="${h-143}" text-anchor="middle" font-size="10" fill="#e74c3c" font-weight="700">Mode</text>
+    <text x="${w/2}" y="${h-5}" text-anchor="middle" font-size="10" fill="#566573">Mean &lt; Median &lt; Mode → Negatively Skewed</text>
+  </svg>`;
+}
+
+updateUI();
+
+// ── GLOBAL CLICK ──
+document.querySelector('.presentation').addEventListener('click', function() { handleNext(); });
+document.getElementById('nextBtn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  handleNext();
+});
+</script>
+</body>
+</html>
